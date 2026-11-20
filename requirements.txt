@@ -1,0 +1,12 @@
+# 剪映草稿生成（版本敏感：草稿格式随剪映升级会变，不要随意升级）
+pyJianYingDraft==0.3.1
+
+# 版面预览与字幕带检测
+Pillow>=10.0
+numpy>=1.24
+
+# 自带 ffmpeg 二进制，无需单独安装
+imageio-ffmpeg>=0.4.9
+
+# 虽然是 pyJianYingDraft 的传递依赖，但代码里直接 import，必须显式声明
+pymediainfo>=6.0

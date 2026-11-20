@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>直播切片剪辑手册 · 口播/游戏趣事类</title>
+<style>
+  :root{
+    --ink:#1f1d1a; --ink2:#4b4741; --ink3:#807a71;
+    --line:#e2ddd4; --bg:#fbfaf7; --card:#ffffff;
+    --blue:#185fa5; --coral:#d85a30; --amber:#ba7517; --gray:#888780;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:15px; line-height:1.75; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:840px;margin:0 auto;padding:56px 28px 96px}
+  header{border-bottom:2px solid var(--ink);padding-bottom:24px;margin-bottom:8px}
+  header .eyebrow{font-size:12px;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase;margin-bottom:12px}
+  h1{font-size:30px;line-height:1.3;margin:0 0 10px;font-weight:600;letter-spacing:-.01em}
+  header p{margin:0;color:var(--ink2);font-size:14px}
+  h2{font-size:19px;font-weight:600;margin:52px 0 6px;padding-top:20px;border-top:1px solid var(--line);letter-spacing:-.01em}
+  h2 .num{color:var(--coral);font-size:13px;font-weight:600;margin-right:8px;letter-spacing:.04em}
+  h3{font-size:15px;font-weight:600;margin:26px 0 8px;color:var(--ink)}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0;padding-left:22px}
+  li{margin:6px 0}
+  li::marker{color:var(--ink3)}
+  strong{font-weight:600}
+  em{font-style:normal;background:linear-gradient(transparent 62%,#fde68a 62%);padding:0 2px}
+  .lede{font-size:16px;color:var(--ink2);margin:20px 0 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:18px 0}
+  .card h4{margin:0 0 8px;font-size:14px;font-weight:600}
+  .warn{border-left:3px solid var(--coral);background:#fdf6f3;border-radius:0 10px 10px 0;padding:16px 20px;margin:18px 0}
+  .warn h4{margin:0 0 6px;font-size:14px;color:#993c1d}
+  .tip{border-left:3px solid var(--blue);background:#f4f8fd;border-radius:0 10px 10px 0;padding:16px 20px;margin:18px 0}
+  .tip h4{margin:0 0 6px;font-size:14px;color:#0c447c}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+  th{text-align:left;font-weight:600;font-size:12px;letter-spacing:.06em;color:var(--ink3);
+     border-bottom:1.5px solid var(--ink);padding:8px 10px 8px 0;text-transform:uppercase}
+  td{padding:10px 10px 10px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+  td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#f1efe8;
+       padding:1px 6px;border-radius:4px;color:#4b4741}
+  .kpi{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
+  .kpi div{flex:1 1 130px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .kpi b{display:block;font-size:21px;font-weight:600;color:var(--blue);line-height:1.2}
+  .kpi span{font-size:12px;color:var(--ink3)}
+  .rule{counter-reset:r;list-style:none;padding:0}
+  .rule li{counter-increment:r;position:relative;padding-left:38px;margin:14px 0}
+  .rule li::before{content:counter(r);position:absolute;left:0;top:1px;width:24px;height:24px;
+    border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:600;
+    display:flex;align-items:center;justify-content:center}
+  .check{list-style:none;padding:0}
+  .check li{position:relative;padding-left:26px;margin:8px 0}
+  .check li::before{content:"";position:absolute;left:0;top:7px;width:12px;height:12px;
+    border:1.5px solid var(--gray);border-radius:3px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:640px){.two{grid-template-columns:1fr}}
+  footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--ink3)}
+  .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;
+       background:#f1efe8;color:var(--ink2);margin-right:6px;vertical-align:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Live Cut Playbook · v1</div>
+  <h1>直播切片剪辑手册</h1>
+  <p>面向「主播口播 + 游戏趣事」类切片 · 剪映专业版实现 · 竖屏 1080×1920</p>
+</header>
+
+<p class="lede">这份手册解决一个问题：<strong>你手上有一段好笑的直播录像，怎么把它变成一条让人愿意看完、愿意点赞的切片。</strong>按顺序读，边读边在剪映里对着做。</p>
+
+<h2><span class="num">00</span>先立三条铁律</h2>
+
+<p>你现在的困惑（字体、花字、特效、音效、音乐）全部属于「包装」。而切片能不能成，<strong>80% 在结构和节奏，包装只占 20%</strong>。所以先接受三件事，否则后面所有技巧都会用错方向。</p>
+
+<ol class="rule">
+  <li><strong>剪辑是情绪工程，不是素材整理。</strong>你剪的不是「发生了什么」，是「观众什么时候笑、什么时候屏住呼吸」。每一次剪切、每一个音效，都要能回答一句：<em>它让观众的情绪发生了什么变化？</em>答不出来的，删掉。</li>
+  <li><strong>一条切片只讲一件事。</strong>直播里连着发生了三件好笑的事，你要选最炸的那一件，另外两件全扔。贪多必死 —— 观众划走只需要 0.5 秒。</li>
+  <li><strong>观众看的是「反应」，不是「事件」。</strong>主播破防时的表情、沉默、语无伦次，比事情本身好笑十倍。所以永远给反应留时长，永远不要在反应中途切走。</li>
+</ol>
+
+<h2><span class="num">01</span>选材：什么样的 30 秒值得剪</h2>
+
+<p>打开录屏，不要从第一个笑点开始剪。先扫全片，只找<strong>一种东西</strong>：</p>
+
+<div class="card">
+  <h4>预期违背（Incongruity）—— 一切笑点的底层机制</h4>
+  <p style="margin-bottom:0">观众脑子里有个预期，主播做的事偏离了这个预期，落差越大越好笑。所以值得剪的片段一定具备下面至少一项：</p>
+</div>
+
+<table>
+  <tr><th>类型</th><th>长什么样</th><th>为什么好笑</th></tr>
+  <tr><td>嘴硬翻车</td><td>「这波我必赢」→ 3 秒后暴毙</td><td>自信与结果的巨大落差</td></tr>
+  <tr><td>身份反差</td><td>一本正经讲歪理、大佬做蠢事</td><td>人设与行为的错位</td></tr>
+  <tr><td>失控瞬间</td><td>突然破音、爆粗、无语沉默</td><td>情绪真实溢出，最珍贵</td></tr>
+  <tr><td>神级金句</td><td>一句精准到荒谬的比喻或吐槽</td><td>信息密度极高，可脱离语境传播</td></tr>
+  <tr><td>连锁反应</td><td>一个错误引发一连串灾难</td><td>层层加码，越滚越大</td></tr>
+</table>
+
+<p><strong>剪之前问自己一句：</strong>如果我只给朋友看这 10 秒，他会不会笑？如果答案是「要看完前面 2 分钟才懂」，那就说明它<em>不该剪</em>，而不是说明你需要把 2 分钟放进去。</p>
+
+<h2><span class="num">02</span>结构：五段式骨架</h2>
+
+<p>这是切片的宪法，所有优秀切片都是这个骨架的变体。时长按 45–75 秒设计。</p>
+
+<table>
+  <tr><th>段落</th><th>时长</th><th>任务</th><th>具体做法</th></tr>
+  <tr><td>① 前置钩子</td><td>0–3 秒</td><td>把最炸的一句直接放最前面</td><td>从后面剪一段最狠的话/最夸张的反应复制到开头，中间可以加「事情是这样的」做过渡</td></tr>
+  <tr><td>② 铺垫</td><td>10–25 秒</td><td>用最短时间交代前提</td><td>删掉所有寒暄、重复、无关闲聊；语速慢的地方 1.2–1.5 倍速</td></tr>
+  <tr><td>③ 引爆点</td><td>3–8 秒</td><td>笑点本体</td><td>前面留 0.6–1 秒静音「憋」一下，再放出来</td></tr>
+  <tr><td>④ 余韵</td><td>2–5 秒</td><td>反应镜头</td><td>主播破防、沉默、重复那句话，别急着切</td></tr>
+  <tr><td>⑤ 收尾</td><td>2–3 秒</td><td>干脆断掉</td><td>最后一句金句说完立刻黑屏/切封面，不要拖</td></tr>
+</table>
+
+<div class="warn">
+  <h4>新手最常见的死法：按时间顺序播</h4>
+  <p style="margin-bottom:0">「大家好，今天我们……（30 秒）」——观众在第 30 秒就划走了，根本等不到你的笑点。<strong>钩子的本质是把高潮提前</strong>，让观众为了「想知道怎么发生的」而留下来，这叫「信息缺口」。所有 10 万赞的切片，第一秒都在制造这个缺口。</p>
+</div>
+
+<h2><span class="num">03</span>节奏：三个数字决定成败</h2>
+
+<div class="kpi">
+  <div><b>0.6–1s</b><span>笑点前静音留白</span></div>
+  <div><b>2–3s</b><span>笑点后反应时长</span></div>
+  <div><b>1.5–3s</b><span>平均镜头长度</span></div>
+</div>
+
+<h3>留白：笑点的一半是「等」</h3>
+<p>笑点的物理原理是<strong>张力释放</strong>。你必须先让观众紧张（主播要输了、要说错话了），再释放。技巧是：在爆点前一帧，把<em>音频清空 0.6–1 秒</em>，画面保持，什么都不加。这一秒的「空」，比任何音效都有力量。</p>
+
+<h3>变速：让节奏有呼吸</h3>
+<ul>
+  <li><strong>铺垫段加速 1.2–1.5×</strong>：废话压缩，信息密度拉满。</li>
+  <li><strong>爆点前减速 0.8×</strong>：慢下来，制造「要出事」的预感。</li>
+  <li><strong>反应镜头减速 0.7–0.8×</strong>：让表情被看清，喜剧效果翻倍。</li>
+  <li>剪映操作：右键片段 → 变速 → 常规变速，或用「曲线变速」做先快后慢。</li>
+</ul>
+
+<h3>重复回放：游戏切片的核心杀招</h3>
+<p>把爆点那 1–1.5 秒重复 2–3 次。第 1 次是「发生了什么」，第 2、3 次是「再看一遍还是好笑」。每次重复给一点变化：</p>
+<ul>
+  <li>第 2 次：画面放大到 110%（放大压力）</li>
+  <li>第 3 次：整体慢放 0.6×，配「嗡嗡」低音</li>
+</ul>
+<p><span class="tag">注意</span>重复不要超过 3 次，第 4 次开始观众就烦了。</p>
+
+<h2><span class="num">04</span>主字幕：让人「不用听也懂」</h2>
+
+<h3>参数（照抄，不要调）</h3>
+<table>
+  <tr><th>项目</th><th>设置</th><th>说明</th></tr>
+  <tr><td>字体</td><td>思源黑体 Heavy / 阿里巴巴普惠体 Bold / 站酷高端黑</td><td>只用黑体。宋体太文气，艺术字影响阅读速度</td></tr>
+  <tr><td>字号</td><td>60–72px（1080×1920 画布）</td><td>手机上占屏宽 2/3 左右，一眼能扫完</td></tr>
+  <tr><td>颜色</td><td>白字 + 纯黑描边 3–4px</td><td>永远是最清晰、最不容易出错的选择</td></tr>
+  <tr><td>位置</td><td>画面高度 68%–75% 区间</td><td>避开人脸，也避开底部 100px 平台 UI</td></tr>
+  <tr><td>行数</td><td>单行，最多两行</td><td>单行 ≤ 9 字；超了就断成两个画面</td></tr>
+  <tr><td>出现方式</td><td>硬切（无动画）</td><td>字幕不要用弹入/淡入，会拖慢节奏感</td></tr>
+</table>
+
+<h3>断句：按「意群」断，不按标点断</h3>
+<p>这是新手和熟手最大的差距。看例子：</p>
+<div class="two">
+  <div class="card"><h4>✕ 错误（按标点断）</h4><p style="margin:0">「我跟你们说，这个人真的很离谱，我昨天在游戏里遇到他，他居然……」</p></div>
+  <div class="card"><h4>✓ 正确（按意群断）</h4><p style="margin:0">「我跟你们说 / 这人真的很离谱 / 昨天游戏里遇到他 / 他居然……」<br><span style="color:#807a71;font-size:13px">每一段对应一个画面切换，观众视觉上有节奏</span></p></div>
+</div>
+<p>另外三个细节：</p>
+<ul>
+  <li><strong>语气词单独成行</strong>：「啊？」「哈？」「不是吧」独占一屏，冲击力强 10 倍。</li>
+  <li><strong>拖长音用破折号</strong>：「绝——了」比「绝了」更有画面感。</li>
+  <li><strong>方言/口音要「翻译」</strong>：主播说得很含糊的口音，字幕写成规范书面表达。观众看字幕的速度远快于听。</li>
+</ul>
+
+<h3>错别字：三个必须逐个查的雷区</h3>
+<p>自动识别 95% 准，但错的那 5% 会让你显得不专业。固定检查这三组：<strong>在／再</strong>、<strong>的／得／地</strong>、<strong>做／作</strong>。另外主播的口头禅、游戏术语、人名特别容易错，第一次遇到就记下来。</p>
+
+<h3>关键词高亮（比整句加粗高级）</h3>
+<p>不要把整句标黄。只把<strong>一个词</strong>变色——通常是动词或形容词，比如「<span style="color:#d85a30;font-weight:600">暴毙</span>」「<span style="color:#d85a30;font-weight:600">离谱</span>」「<span style="color:#d85a30;font-weight:600">麻了</span>」。颜色固定用两三种，全场统一，不要今天黄明天紫。</p>
+
+<h2><span class="num">05</span>花字：情绪的标点符号</h2>
+
+<p>花字的作用不是「让画面热闹」，是<strong>在观众该笑的地方给一个视觉重音</strong>。所以它必须稀缺。</p>
+
+<div class="tip">
+  <h4>唯一规则：一条片子 ≤ 5 个花字</h4>
+  <p style="margin-bottom:0">超过 5 个，观众的眼睛就疲劳了，第 6 个开始全部失效，反而显得土。<strong>宁可少，不可多。</strong>如果一条 60 秒切片你放了 12 个花字，说明你在用花字掩盖「剪辑本身不好笑」。</p>
+</div>
+
+<h3>放哪里</h3>
+<ul>
+  <li><strong>爆点那一帧</strong>：把最核心的情绪词放大到 100–140px，比如「破防」「离谱」「完了」。</li>
+  <li><strong>反应镜头</strong>：主播呆住时，旁边飘一个「……」，或者「？」。</li>
+  <li><strong>数据/反差</strong>：出现「0 杀」「连跪 7 把」这种数字时，用数字花字。</li>
+</ul>
+<p><strong>绝对不要</strong>放在人脸上，也不要每个镜头都放。空白处才是它该待的地方。</p>
+
+<h3>字体与配色</h3>
+<table>
+  <tr><th>场景</th><th>字体</th><th>配色</th></tr>
+  <tr><td>夸张搞笑</td><td>站酷快乐体 / 汉仪黑荔枝</td><td>亮黄填充 + 黑描边 + 轻微斜切</td></tr>
+  <tr><td>震惊/破防</td><td>优设标题黑 / 造字工房力黑</td><td>纯白 + 红色外发光描边</td></tr>
+  <tr><td>讽刺/无语</td><td>思源黑体 Heavy</td><td>黑底白字方块（像弹幕）</td></tr>
+</table>
+
+<h3>动效：只用一种</h3>
+<p>剪映花字自带动效，选 <strong>弹入（bounce）</strong> 或 <strong>放大收缩</strong>，二选一，全场统一。不要旋转、不要粒子、不要闪烁——这些是「廉价感」的主要来源。</p>
+
+<h2><span class="num">06</span>音效：六到十个，一个不多</h2>
+
+<p>音效是切片里<strong>投入产出比最高</strong>的东西：加对 3 个音效，视频立刻「专业」；加 20 个，立刻「噪音」。</p>
+
+<div class="kpi">
+  <div><b>6–10</b><span>一条切片的音效数量</span></div>
+  <div><b>−8dB</b><span>音效相对音量</span></div>
+  <div><b>1帧</b><span>音效提前量（要早于画面）</span></div>
+</div>
+
+<h3>四类音效，各司其职</h3>
+<table>
+  <tr><th>类别</th><th>剪映搜索关键词</th><th>用在哪</th></tr>
+  <tr><td>强调（正向）</td><td>叮、咚、Boom、重低音、震撼、提示音</td><td>金句落地、神操作、数字出现</td></tr>
+  <tr><td>反讽（负向）</td><td>唱片刮擦、尴尬、乌鸦飞过、锣、喇叭失败、Bruh</td><td>翻车、嘴硬被打脸、突然冷场</td></tr>
+  <tr><td>情绪</td><td>笑声、哇、叹气、倒吸凉气、心跳、沉默</td><td>反应镜头、破防瞬间</td></tr>
+  <tr><td>转场</td><td>嗖、whoosh、闪白、快门</td><td>跳跃剪辑、时间快进</td></tr>
+</table>
+
+<h3>三个落点技巧</h3>
+<ul>
+  <li><strong>提前 1 帧</strong>：音效比画面早一点点出现，观众的「预感」被触发，比同步更爽。</li>
+  <li><strong>打脸音效要连续下坠</strong>：嘴硬时一声「叮」，翻车时立刻接「唱片刮擦」+「乌鸦」，两个音效叠 0.3 秒，效果成倍。</li>
+  <li><strong>最关键的一招：静音也算音效。</strong>在爆点前把所有声音（人声保留、BGM 归零、音效不加）抽空 0.6–1 秒，这一秒的「真空」比任何音效都抓人。叫「憋」。</li>
+</ul>
+
+<h2><span class="num">07</span>音乐：底乐、卡点、反转</h2>
+
+<p>你说对音乐「一窍不通」，其实只需要掌握三种操作：选什么、怎么卡、怎么反。</p>
+
+<h3>① 选底乐：只按情绪选，不按好听选</h3>
+<table>
+  <tr><th>切片情绪</th><th>BGM 类型</th><th>剪映搜索词</th></tr>
+  <tr><td>轻松搞笑（通用）</td><td>轻快电子、滑稽循环、拨弦</td><td>搞笑、滑稽、轻松、欢乐、综艺</td></tr>
+  <tr><td>紧张悬念</td><td>低音脉冲、心跳、倒计时</td><td>悬疑、紧张、压迫、倒数</td></tr>
+  <tr><td>悲情/破防</td><td>钢琴慢板、弦乐</td><td>伤感、悲壮、emo、煽情</td></tr>
+  <tr><td>燃/神操作</td><td>鼓点强烈的电子、史诗</td><td>燃、史诗、战斗、热血</td></tr>
+</table>
+
+<h3>② 音量：一条硬规矩</h3>
+<p><strong>人声永远是主角。</strong>峰值控制在 −6dB 到 −3dB，BGM 压到 −22dB 到 −18dB。判断标准很简单：<em>把手机音量调到 30%，如果你听不清主播说话，就是 BGM 太大。</em>直播切片 90% 的「不好看」其实是「听不清」。</p>
+
+<h3>③ 卡点：让画面「踩」在鼓点上</h3>
+<ul>
+  <li>打开剪映的「自动踩点」，把切点吸附到节拍上。铺垫段每 2 拍切一次，爆点段每 1 拍切一次。</li>
+  <li>不需要每个镜头都卡点，<strong>只在爆点前后 5 秒卡</strong>，其余自然剪辑。全程卡点反而机械。</li>
+</ul>
+
+<h3>④ 音乐反转：你问的那个「反转发」</h3>
+<p>核心思路是<strong>用音乐制造「预期违背」</strong>——画面在讲 A，音乐突然宣告 B，落差本身就是笑点。四招，从易到难：</p>
+
+<div class="card">
+  <h4>第 1 招｜硬切（最常用，最好学）</h4>
+  <p style="margin-bottom:0">欢快的 BGM 播到高潮，在笑点那一帧<strong>直接切断</strong>，静音 0.8 秒，然后接一个完全不相干的音乐（通常是悲伤或严肃的）。配合画面定格。<br><span style="color:#807a71;font-size:13px">剪映操作：把 BGM 片段切成两段，中间留空隙，后一段换另一首。</span></p>
+</div>
+
+<div class="card">
+  <h4>第 2 招｜变速下坠</h4>
+  <p style="margin-bottom:0">同一首 BGM，在后面那段把速度改成 <code>0.8×</code> 甚至 <code>0.6×</code>，音调跟着变低，产生「往下掉」的物理感。用在主播从自信到崩溃的过程，效果极佳。<br><span style="color:#807a71;font-size:13px">剪映操作：音频 → 变速 → 常规变速，取消「声音变调」勾选会更自然。</span></p>
+</div>
+
+<div class="card">
+  <h4>第 3 招｜错位配乐（高级）</h4>
+  <p style="margin-bottom:0">画面在挨打/翻车，音乐却在放婚礼进行曲、新闻联播片头、生日快乐歌。音乐越正经，画面越可笑。这是所有「鬼畜」和「整活」类切片的通用语法。</p>
+</div>
+
+<div class="card">
+  <h4>第 4 招｜真空（最强，也最难）</h4>
+  <p style="margin-bottom:0">不是加音乐，是<strong>把所有声音全部拿掉</strong>。在爆点前 1 秒，人声、BGM、音效同时归零，画面继续——观众会瞬间屏住呼吸。然后爆点一出，声音全砸回来。<br><span style="color:#807a71;font-size:13px">这一招用一次就够，一条片子里只用一次，用两次就失效。</span></p>
+</div>
+
+<h2><span class="num">08</span>封面：决定点击率的那一格</h2>
+
+<p>封面不参与「好不好看」，它只负责一件事：<strong>让人在信息流里停下来</strong>。所以它的设计逻辑和视频内部完全不同 —— 要「丑得醒目」，不要「美得安静」。</p>
+
+<h3>三要素公式</h3>
+<table>
+  <tr><th>要素</th><th>要求</th><th>常见错误</th></tr>
+  <tr><td>人脸</td><td>截最夸张的一帧：张嘴、瞪眼、扭曲、呆滞</td><td>用微笑正脸，毫无张力</td></tr>
+  <tr><td>大字</td><td>3–6 个字，占画面 1/3，字重最粗，描边 5px</td><td>写完整句子，字太小，缩略图看不清</td></tr>
+  <tr><td>色块</td><td>高饱和纯色底（黄/红/蓝）衬托文字</td><td>背景和主播衣服同色，糊成一团</td></tr>
+</table>
+
+<h3>文案四个模板（直接套）</h3>
+<ul>
+  <li><strong>疑问式</strong>：「这也行？」「他真敢说」</li>
+  <li><strong>结果前置</strong>：「3 秒笑出声」「当场破防」</li>
+  <li><strong>反差式</strong>：「最强嘴硬」「主播的极限」</li>
+  <li><strong>身份式</strong>：「主播名：我裂开了」</li>
+</ul>
+
+<div class="tip">
+  <h4>检验方法：把封面缩到手机屏幕的 1/8 大小</h4>
+  <p style="margin-bottom:0">如果这时候你还看不清那 4 个字、认不出是什么表情，就重做。<strong>所有封面设计错误，在缩略图尺寸下都会暴露。</strong></p>
+</div>
+
+<h2><span class="num">09</span>这类主播的三个特殊处理</h2>
+
+<p>口播型主播（语速快、口头禅密、情绪起伏大）的素材，有三个共性难点：</p>
+
+<ol class="rule">
+  <li><strong>语速太快，字幕跟不上。</strong>不要试图把每个字都上屏。做法：<em>只保留信息词和情绪词</em>，中间的「那个」「就是说」直接不显示——观众靠听补全，反而更顺畅。</li>
+  <li><strong>口头禅重复太多。</strong>同一句口癖在 20 秒内出现 3 次，就剪掉 2 次。留 1 次是「人设」，留 3 次是「啰嗦」。这个判断需要你反复看片，是切片号最核心的手艺。</li>
+  <li><strong>口音/方言听不清。</strong>字幕要「翻译」成书面中文，同时在花字或贴片里轻点一句方言梗（如果这个梗有传播度）。字幕的功能是<em>降低理解成本</em>，不是忠实记录。</li>
+</ol>
+
+<h2><span class="num">10</span>30 分钟实操清单</h2>
+
+<p>第一条片子照着这个流程走，不要返工，不要中途改主意。</p>
+
+<table>
+  <tr><th>时间</th><th>动作</th><th>完成标准</th></tr>
+  <tr><td>0–3 min</td><td>选段：找出 1 个爆点，前后各留 40 秒</td><td>能一句话说清「这条片子讲什么」</td></tr>
+  <tr><td>3–8 min</td><td>粗剪：掐掉所有废话、重复、冷场</td><td>只剩事情本身，30–50 秒</td></tr>
+  <tr><td>8–11 min</td><td>前置钩子：把爆点复制到开头 3 秒</td><td>第 1 秒就有声音/情绪</td></tr>
+  <tr><td>11–17 min</td><td>主字幕：识别 → 断句 → 改错别字</td><td>单行 ≤ 9 字，零错别字</td></tr>
+  <tr><td>17–21 min</td><td>音效：6–8 个，按四类落点</td><td>爆点前后各 2 个，其余留白</td></tr>
+  <tr><td>21–25 min</td><td>花字 3–5 个 + BGM + 一处反转</td><td>花字不压脸，BGM 不盖人声</td></tr>
+  <tr><td>25–28 min</td><td>封面：截帧 + 大字 + 导出</td><td>缩略图尺寸能看清</td></tr>
+  <tr><td>28–30 min</td><td>自检：静音看一遍 + 开声看一遍</td><td>静音能看懂剧情，开声能听清人话</td></tr>
+</table>
+
+<h2><span class="num">11</span>新手八个坑（对照自查）</h2>
+
+<ol class="rule">
+  <li><strong>字幕一行太长。</strong>超过 12 个字，手机上一行放不下，观众读得累。</li>
+  <li><strong>花字满屏。</strong>超过 5 个，全部失效，且显廉价。</li>
+  <li><strong>音效堆砌。</strong>每个动作都加音效，等于没有音效。</li>
+  <li><strong>BGM 盖过人声。</strong>最常见的致命错误，占「不好看」原因的一半。</li>
+  <li><strong>不敢剪。</strong>3 分钟的素材剪成 2 分 50 秒，等于没剪。狠一点，剪到 40 秒。</li>
+  <li><strong>每个笑点都想留。</strong>一条片子只服务一个笑点，其余全是铺垫。</li>
+  <li><strong>没有钩子。</strong>前 3 秒是「大家好」「今天我们」，直接判死。</li>
+  <li><strong>错别字。</strong>「在/再」混用，观众会瞬间觉得不专业。</li>
+</ol>
+
+<div class="warn">
+  <h4>关于授权，别跳过这一条</h4>
+  <p style="margin-bottom:0">直播切片属于二次创作，需要取得主播或其公会的<strong>切片授权</strong>。多数平台（抖音、快手）设有官方切片授权入口，通常会约定分成比例与素材使用范围。<strong>建议先确认你走的授权渠道，再开始量产</strong>——否则做得越好，风险越大。BGM 也请优先用平台曲库内的音乐，商用授权问题会在被投诉时才爆发。</p>
+</div>
+
+<h2><span class="num">12</span>下一步</h2>
+
+<ul class="check">
+  <li>用这份手册的流程，完整剪出<strong>第一条</strong>切片（30 分钟，不要超过）</li>
+  <li>把字幕参数、花字配色、BGM 音量记成一张「预设卡」，以后每条复用</li>
+  <li>连剪 <strong>5 条</strong>之后，回看哪一条数据最好，拆解它为什么好</li>
+  <li>建一个自己的音效包文件夹，把用过好用的音效存下来（按四类分）</li>
+</ul>
+
+<footer>
+  剪辑是手艺，手册只能给你地图，路要自己走。前 10 条一定会难看，第 20 条开始会有感觉。<br>
+  参数不是真理，是起点 —— 等你剪到第 30 条，你会开始违背这份手册，那时候才是真的会了。
+</footer>
+
+</div>
+</body>
+</html>

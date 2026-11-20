@@ -1,0 +1,23 @@
+# 运行环境（体积大、含本机绝对路径，绝不要提交）
+.venv/
+venv/
+env/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# 素材与产物：体积大 / 含他人直播内容版权，不要提交
+uploads/
+preview/
+demo/
+*.log
+
+# 一次性维护脚本（给作者自己用，不进仓库）
+push-to-github.bat
+
+# 系统杂项
+.DS_Store
+Thumbs.db
+desktop.ini

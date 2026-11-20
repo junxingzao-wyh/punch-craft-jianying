@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>直播切片工作流 · 完整手册</title>
+<style>
+  :root{
+    --ink:#1f1d1a; --ink2:#4b4741; --ink3:#807a71;
+    --line:#e2ddd4; --bg:#fbfaf7; --card:#ffffff;
+    --blue:#185fa5; --coral:#d85a30; --amber:#ba7517; --green:#3b6d11;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:15px;line-height:1.78;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:52px 28px 96px}
+  header{border-bottom:2px solid var(--ink);padding-bottom:22px}
+  header .eyebrow{font-size:12px;letter-spacing:.14em;color:var(--ink3);margin-bottom:10px}
+  h1{font-size:30px;line-height:1.28;margin:0 0 10px;font-weight:600;letter-spacing:-.01em}
+  header p{margin:0;color:var(--ink2);font-size:14px}
+  h2{font-size:20px;font-weight:600;margin:52px 0 10px;padding-top:22px;border-top:1px solid var(--line)}
+  h2 .num{color:var(--coral);font-size:13px;font-weight:700;margin-right:9px;letter-spacing:.04em}
+  h3{font-size:15px;font-weight:600;margin:28px 0 8px}
+  h4{font-size:14px;font-weight:600;margin:0 0 8px}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0;padding-left:22px}
+  li{margin:6px 0}
+  li::marker{color:var(--ink3)}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#f1efe8;
+    padding:1px 6px;border-radius:4px;color:#4b4741}
+  .lede{font-size:16px;color:var(--ink2);margin:20px 0 0}
+  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:24px 0}
+  .flow div{border-radius:10px;padding:13px 14px;border:1px solid var(--line);background:var(--card)}
+  .flow .who{font-size:11px;letter-spacing:.06em;color:var(--ink3);margin-bottom:4px}
+  .flow .what{font-size:13.5px;font-weight:500;line-height:1.45}
+  .flow .t{font-size:11.5px;color:var(--ink3);margin-top:6px}
+  .flow .me{border-color:#b5d4f4;background:#f4f8fd}
+  .flow .you{border-color:#f0c9b8;background:#fdf6f3}
+  @media(max-width:760px){.flow{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+  .tip{border-left:3px solid var(--blue);background:#f4f8fd;border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+  .tip h4{margin:0 0 6px;font-size:14px;color:#0c447c}
+  .warn{border-left:3px solid var(--coral);background:#fdf6f3;border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+  .warn h4{margin:0 0 6px;font-size:14px;color:#993c1d}
+  .ok{border-left:3px solid var(--green);background:#f6faf0;border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}
+  .ok h4{margin:0 0 6px;font-size:14px;color:#3b6d11}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px}
+  th{text-align:left;font-weight:600;font-size:12px;letter-spacing:.05em;color:var(--ink3);
+    border-bottom:1.5px solid var(--ink);padding:8px 10px 8px 0}
+  td{padding:10px 10px 10px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+  td:first-child{color:var(--ink);font-weight:500}
+  td code{font-size:12.5px}
+  .steps{counter-reset:s;list-style:none;padding:0}
+  .steps>li{counter-increment:s;position:relative;padding-left:42px;margin:22px 0}
+  .steps>li::before{content:counter(s);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;
+    background:var(--ink);color:#fff;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center}
+  .steps b{font-weight:600}
+  .check{list-style:none;padding:0;margin:14px 0}
+  .check li{position:relative;padding-left:28px;margin:9px 0;color:var(--ink2)}
+  .check li::before{content:"";position:absolute;left:0;top:6px;width:13px;height:13px;
+    border:1.5px solid #a8a29a;border-radius:3px}
+  .filetag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:20px;
+    border:1px solid var(--line);color:var(--ink3);margin-left:6px;vertical-align:1px;white-space:nowrap}
+  .filetag.must{background:#fdf6f3;border-color:#f0c9b8;color:#993c1d}
+  .filetag.ref{background:#f4f8fd;border-color:#b5d4f4;color:#0c447c}
+  .filetag.skip{background:#f3f2ee;color:#807a71}
+  .kv{display:grid;grid-template-columns:96px 1fr;gap:10px 14px;margin:14px 0;font-size:14px}
+  .kv dt{color:var(--ink3);font-size:13px}
+  .kv dd{margin:0;color:var(--ink2)}
+  .tag-line{font-size:12.5px;color:var(--ink3);margin:6px 0 0}
+  .big{font-size:17px;font-weight:600;color:var(--ink)}
+  .dim{color:var(--ink3);font-size:13.5px}
+  footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--ink3)}
+  hr.sep{border:0;border-top:1px dashed var(--line);margin:28px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Workflow Manual · 直播切片</div>
+  <h1>从录屏到成片：完整工作流手册</h1>
+  <p>所有文件、全部流程、每个参数的出处，都在这一份里。遇到问题先翻第 07 节。</p>
+</header>
+
+<p class="lede">这一遍走完，你会得到一条 <strong>40 秒左右、4 段拼接、声音不重复、字幕不打架</strong>的成片。这条路是通的。</p>
+
+<p>接下来这份手册解决两件事：<strong>① 以后每次怎么重复这个流程；② 打开剪映之后那 20 分钟具体怎么剪</strong>——你说"提示部分具体剪辑修改还不会"，那是第 4、5 节的内容，可以照着一步步做。</p>
+
+<div class="flow">
+  <div class="you"><div class="who">阶段 A · 你</div><div class="what">识别字幕<br>导出 SRT</div><div class="t">约 2 分钟</div></div>
+  <div class="you"><div class="who">阶段 B · 你</div><div class="what">读字幕稿<br>挑段 + 定钩子</div><div class="t">约 8 分钟</div></div>
+  <div class="me"><div class="who">阶段 C · 工具</div><div class="what">拼接 · 生成<br>剪映草稿</div><div class="t">约 1 分钟</div></div>
+  <div class="you"><div class="who">阶段 D · 你</div><div class="what">音效 · 花字<br>BGM · 封面</div><div class="t">约 20 分钟</div></div>
+  <div class="you"><div class="who">阶段 E · 你</div><div class="what">导出 · 发布</div><div class="t">约 5 分钟</div></div>
+</div>
+
+<h2><span class="num">01</span>文件清单：哪个该打开，哪个别碰</h2>
+
+<p>目录是 <code>punch-craft-jianying\</code>。别看名字多，你日常只需要碰其中两个。</p>
+
+<table>
+  <tr><th style="width:34%">文件</th><th style="width:12%">类别</th><th>什么时候用它</th></tr>
+  <tr>
+    <td>start.bat<br><span class="dim">双击</span></td>
+    <td><span class="filetag must">日常用</span></td>
+    <td><b>每次剪片都从这里开始。</b>双击后浏览器自动打开操作页面，拖视频、拖 SRT、点句子、生成草稿。<b>那个黑窗口开着别关</b>，它就是服务本身。</td>
+  </tr>
+  <tr>
+    <td>guide.html<br><span class="dim">就是本文件</span></td>
+    <td><span class="filetag must">日常用</span></td>
+    <td>流程忘了、报错了、不知道下一步干什么，翻它。建议加浏览器书签。</td>
+  </tr>
+  <tr>
+    <td>editing-craft.html</td>
+    <td><span class="filetag ref">学习用</span></td>
+    <td>讲<b>怎么剪得有感染力</b>：情绪曲线、花字规范、6 种音效搭配、音乐反转四招、封面。阶段 D 拿不准"该放什么"时查这里，不是流程文档。</td>
+  </tr>
+  <tr>
+    <td>README.md</td>
+    <td><span class="filetag ref">查参数</span></td>
+    <td>技术细节：每个命令行参数、参数在哪一行、已知限制。想改风格但不知道改哪个数字时看它。</td>
+  </tr>
+  <tr>
+    <td>make_draft.py<br>gui.py<br>preview.py</td>
+    <td><span class="filetag skip">别手动改</span></td>
+    <td>程序本体。界面已经在调用它们，你不需要直接运行。要改样式改 <code>make_draft.py</code> 顶部的参数区（见第 08 节）。</td>
+  </tr>
+  <tr>
+    <td>start-cli.bat<br><span class="dim">黑窗口向导</span></td>
+    <td><span class="filetag skip">备用</span></td>
+    <td>网页界面打不开时的退路：双击后一路问你（拖视频进去、打编号），功能一样但要在黑窗口里打命令。</td>
+  </tr>
+  <tr>
+    <td>slice_by_text.py<br><span class="dim">命令行版</span></td>
+    <td><span class="filetag skip">备用</span></td>
+    <td>上面那个向导调用的本体，也是我批量处理时用的。命令：<code>--video</code> <code>--srt</code> <code>--pick 18,19,20</code> <code>--hook 25</code>。</td>
+  </tr>
+  <tr>
+    <td>fix-audio.bat<br><span class="dim">双击</span></td>
+    <td><span class="filetag skip">救急用</span></td>
+    <td><b>草稿打开后完全没声音时用它。</b>先彻底退出剪映，双击它、直接回车（默认修最新那个草稿），再回剪映打开就有声了。原因与原理见第 07 节症状对照表第一行。</td>
+  </tr>
+  <tr>
+    <td>uploads\</td>
+    <td><span class="filetag must">别删</span></td>
+    <td><b>你上传的视频副本存在这里（现在 372MB）。</b>剪映草稿引用的就是这份文件，删了草稿会提示"素材丢失"。等片子导出、确认不再改了再清理。</td>
+  </tr>
+  <tr>
+    <td>preview\</td>
+    <td><span class="filetag ref">看效果</span></td>
+    <td>每次生成草稿时同步产出的<b>版面预览图</b>，不开剪映就能核对字幕挡不挡脸。</td>
+  </tr>
+  <tr>
+    <td>demo\</td>
+    <td><span class="filetag skip">可删</span></td>
+    <td>15 秒测试素材，只在验证工具是否正常时用。</td>
+  </tr>
+</table>
+
+<h2><span class="num">02</span>阶段 A：把录屏变成"可挑的字幕稿"</h2>
+
+<p>这一步的目的不是加字幕，是<strong>把声音变成文字，好让你用眼睛挑段</strong>——而不是拖时间轴反复听一小时。</p>
+
+<ol class="steps">
+  <li>
+    <b>新建草稿，把录屏拖进剪映</b><br>
+    录屏本身的要求：<b>连续、不中断、不切场景</b>。一次直播录一整段，切成十几段反而不好处理。
+  </li>
+  <li>
+    <b>识别字幕</b><br>
+    顶部 <code>文本</code> → <code>智能字幕</code> → <code>识别字幕</code> → 开始识别。5 分钟素材约 30 秒出结果。
+  </li>
+  <li>
+    <b>改掉三类错字（只改这三类，别通读）</b><br>
+    <b>人名</b>（主播名、队友 ID、嘉宾名）、<b>游戏术语</b>（技能名、装备名、地图名）、<b>他的口头禅</b>。这三类恰恰是切片里最关键的字，识别错了会让观众出戏。<br>
+    其余错字不用管——你后面不加新字幕，识别稿只是给你自己看的。
+  </li>
+  <li>
+    <b>导出 SRT</b><br>
+    右上角 <code>导出</code> → 格式选 <b>SRT</b>（不是视频）→ 导到你能找到的地方，比如桌面。
+  </li>
+</ol>
+
+<div class="ok">
+  <h4>技巧：直接在字幕面板里改，别在时间轴上改</h4>
+  <p>双击时间轴上的字幕条容易误拖动。用左侧「文本」面板里的字幕列表逐条点选，改起来快得多。</p>
+</div>
+
+<h2><span class="num">03</span>阶段 B：挑段——这是唯一没法自动化的环节</h2>
+
+<p>双击 <code>start.bat</code>，把视频和 SRT 分别拖进两个框。页面会列出<strong>带编号的所有句子</strong>（5 分钟约 60–90 句）。</p>
+
+<h3>怎么从一个列表里挑出一条片子</h3>
+
+<p>不要从头读到尾然后"看哪句好笑"。用这个顺序，效率高得多：</p>
+
+<ol class="steps">
+  <li>
+    <b>先找结尾，倒着往前推</b><br>
+    一条切片必须<b>结束在一个笑点上</b>，不能说完就断。所以先找"最炸的那一句"，它要么当开头钩子，要么当结尾。找到它，这条片子的骨架就有了。
+  </li>
+  <li>
+    <b>再往前找"起因"</b><br>
+    笑点前面通常有一句交代背景的话（"我跟你们说昨天遇到个人……"）。从这一句开始选，否则观众不知道你在笑什么。
+  </li>
+  <li>
+    <b>连续选中，不要跳选</b><br>
+    从"起因"到"笑点"整套选下来，中间别跳。跳着选会把两件不相干的事拼在一起，成片会跳。<br>
+    <b>操作</b>：点第一句 → 按住 <code>Shift</code> 点最后一句，整段选中。
+  </li>
+  <li>
+    <b>设钩子</b><br>
+    把笑点那句再点一次「设钩」。它会同时出现在<b>开头 0–2 秒</b>，并从原位置被挖掉（不会播两遍）。<br>
+    这是抖音切片的规矩：<b>第 1 秒就给最好笑那句</b>，然后倒回去讲事情怎么发生的。
+  </li>
+</ol>
+
+<div class="warn">
+  <h4>长度红线：45–75 秒</h4>
+  <p>页面底部会实时显示选中段的时长。<b>超过 90 秒基本没救</b>——完播率会崩，平台不给推。宁可砍掉铺垫，也不要为了"讲完整"而拉长。</p>
+  <p>一条 40 秒左右的切片，通常就是 25–35 句。把整场 90–100 句全选上、做成三四分钟，那是一条完整录屏，不是切片。</p>
+</div>
+
+<h3>挑段的三个判断标准（多剪 20 条才有的直觉，先背下来）</h3>
+<table>
+  <tr><th style="width:22%">标准</th><th>怎么判断</th></tr>
+  <tr><td>有反转</td><td>听完有一句"啊？"的反应。平铺直叙的段子再好笑也别选。</td></tr>
+  <tr><td>不看前情也懂</td><td>把这段单独拿给你妈看，她能笑 → 成立。需要"上周那把游戏"作为前提的 → 不成立。</td></tr>
+  <tr><td>有反应镜头</td><td>笑点之后他那 2 秒的表情/沉默，比台词更值钱。<b>选段时务必把笑点后面多包一句进去</b>，别在笑点处直接切断。</td></tr>
+</table>
+
+<h2><span class="num">04</span>阶段 C：生成草稿（三个选项怎么选）</h2>
+
+<p>页面底部有几项设置，只有一项需要你动脑：</p>
+
+<table>
+  <tr><th style="width:26%">设置</th><th>怎么选</th></tr>
+  <tr><td>版式</td><td><b>发抖音就选「竖屏 9:16 · 模糊背景」。</b>它会做三件事：<br>① 画布 1080×1920；② 把同一段画面放大 + 模糊 + 压暗，铺满整屏当背景（不再是死黑）；③ 原来的横屏画面按原比例放在<b>中间偏上</b>（中心在 44% 高度，左右两个人都不裁）。<br>位置分配：上方 13% 留给标题/钩子大字，中间 28%–60% 是画面，下方 76% 放新字幕。<br><small>「竖屏分栏」是黑底版，视频贴顶、下面一整块黑，比较硬；「跟素材走」= 横屏直出，只在不需要 9:16 时用。</small></td></tr>
+  <tr><td>叠加我自己的字幕</td><td><b>竖屏版式（模糊背景/分栏）下可以勾。</b>新字幕落在画面<b>下方</b>的空白区，跟画面里的原字幕空间上是分开的，不会叠在一起。<br><b>只有「跟素材走」的横屏满屏版式下不要勾</b>——那时新字幕只能压在画面上，必然跟原字幕打架。</td></tr>
+  <tr><td>抹掉画面里的原字幕</td><td><b>默认勾上。</b>你的录屏底部烧死了一行旧字幕（画面 83%–90% 高度处），加了自己的大字幕后它就重复了。<br>勾上会把这条横带<b>原位补平</b>：程序先自动认出字幕在哪、有多宽，再用四周的像素往里插值（ffmpeg delogo），把字抹掉。<b>画面尺寸、比例一点都不变</b>，人物不会被切、画面也不会变矮。<br><b>代价</b>：视频要重编码一次（5 分钟约 1–2 分钟），结果缓存在 <code>uploads\_clean\</code>，同一条片子再生成不用重等。<br>如果某条片子字幕位置特别、抹不干净，就取消勾选，然后在剪映里把新字幕挪开旧字幕的位置。</td></tr>
+  <tr><td>背景模糊</td><td><b>只在「模糊背景」版式下起作用</b>（切到别的版式会自动灰掉）。改的是最底下那层背景的糊度，<b>中间讲事情的画面一直是清晰的</b>，怎么调都不影响看清人脸。<br>五档：<code>不糊</code>（只放大，背景等于第二份实画面）/ <code>轻</code>（还看得出轮廓，适合想让背景有点内容的时候）/ <code>中</code> / <code>强</code>（默认，只剩色块，最不抢戏）/ <code>极强</code>（一团色雾，接近纯色块）。<br><b>拿不准就用默认的「强」。</b>成片里觉得背景太糊、太假，往上调一档到「中」；觉得背景里的人和动作太抢眼，往「极强」调。</td></tr>
+  <tr><td>前后留白</td><td>保持 <code>0.2</code>。<b>只在"句子开头被截掉半个字"时才调大到 0.4。</b>调太大反而会把上一句的尾巴带进来。</td></tr>
+  <tr><td>接缝淡化</td><td>保持 <code>0.12</code> 秒。<b>这是"切换不咔"的关键</b>——每段开头音量从 0 渐入、结尾渐出，把爆音和突兀感消掉。填 <code>0</code> 可以关掉。</td></tr>
+  <tr><td>转场</td><td><b>默认选「不加」。</b>直播切片大量用硬切，切点靠音效和花字盖住才自然。只有当你选的几段<b>时间上跳跃很大</b>（比如从游戏画面跳到三小时后的反应）时，才在那一处用「叠化」或「闪白」。<br>一次生成只给一种转场，所以别指望它自动分辨该用哪个。</td></tr>
+  <tr><td>爆点句号</td><td><b>填你觉得最炸的那几句的编号</b>，逗号分隔，比如 <code>42,88,136</code>。填了以后程序自动做：① 爆点句前面切出 0.2 秒、音量拉 0（<b>静音留白</b>）；② 画面推到 1.12 倍再回正（<b>推近</b>）；③ 在时间轴上把那一小段单独切出来（你在剪映里一眼能看到）。<br>留空也能生成，只是这两件事要你在剪映里手动做（见阶段 D）。<b>一条片子填 2–4 个就够，别每个笑点都推。</b></td></tr>
+  <tr><td>提示</td><td><b>保持「标记轨」。</b>提示会变成时间轴上的<b>静音占位音频</b>，文件名就是提示内容（「12.4s_爆点-唱片 刮擦」），位置精确到 0.1 秒，<b>画面里完全看不见</b>，听到那里把占位删掉、原位拖入真音效即可。<br>选「标记轨 + 画面钩子标签」会额外在片头 1.2 秒贴一个橙色标签——<b>会盖住一点画面</b>，只有想在预览区也看到提醒时才选；「只画面标签」是旧行为。</td></tr>
+  <tr><td>草稿名</td><td>写成你能认出来的：<b>日期 + 内容关键词</b>，比如 <code>1120-狗懒子</code>。别用"切片1""测试"。</td></tr>
+</table>
+
+<p>点「生成剪映草稿」，日志出现 <code>✅ 完成</code> 就成了。下面会显示一张<b>版面预览图</b>——先看这张图，确认字幕没挡脸、画面没黑边，再打开剪映。</p>
+
+<div class="tip">
+  <h4>想重新生成时，换个名字</h4>
+  <p>同名会覆盖。如果某个草稿你已经在剪映里剪了一半，重新生成时务必改个名，否则辛苦剪的包装会被冲掉。另外草稿一旦在剪映里保存过，文件会被加密，程序就读不回来了——这是正常现象，不影响使用。</p>
+</div>
+
+<h2><span class="num">05</span>阶段 D：剪映里那 20 分钟（你缺的就是这节）</h2>
+
+<p><b>先做一件事：</b>生成草稿成功后，网页上会多出一个按钮 <b>「打开配乐 / 音效 / 花字 / 标题建议清单」</b>。点它，会打开一份和你这条片子对得上的清单——BGM 选哪套、第几秒放什么音效（连搜索词和音量都写了）、花字写什么字用什么样式、发布标题和封面大字直接复制。把它放在旁边，边看边剪，不用当场想。</p>
+
+<p>打开剪映，草稿列表里点开你的片子。你会看到几条轨道，从上到下大概是：</p>
+
+<div class="card">
+  <dl class="kv">
+    <dt>施工标记·导出前删我</dt><dd>一条<b>静音音频轨</b>，每个提示是一小段占位音频，<b>文件名就是提示</b>：「12.4s_爆点-唱片 刮擦」「0.0s_钩子-最炸这句放最前」← 位置精确到 0.1 秒，<b>画面里完全看不见</b></dd>
+    <dt>花字</dt><dd>空轨，等你加</dd>
+    <dt>主字幕</dt><dd>空轨（原片自带字幕，所以没生成）</dd>
+    <dt>主视频</dt><dd>你的片段，4 段左右</dd>
+  </dl>
+</div>
+
+<div class="tip">
+  <h4>为什么提示不在画面里，而是在一条音频轨上</h4>
+  <p>之前试过把「这里放刮擦」「这里留白」直接打在画面上——几张橙色标签一贴，人脸和字幕全被盖住，最后只能留一个。改成网页清单吧，又得在浏览器和剪映之间来回对时间码。</p>
+  <p>现在换成<b>占位音频</b>：剪映时间轴上的音频片段会显示素材文件名，所以你会看到一串小色块，名字就是「12.4s_爆点-唱片 刮擦」。<b>三件事同时成立</b>——画面干净、位置精确、剪映里直接读得到。</p>
+  <p>用法：听到那个位置觉得该加音效，就把这一小段占位<b>删掉，在原位拖入真音效</b>；也可以全部加完之后，把整条轨一次性删掉。</p>
+</div>
+
+<div class="tip">
+  <h4>先说一个反直觉的结论：切点"生硬"，九成不是缺转场</h4>
+  <p>人耳对<b>声音突变</b>极其敏感：上一段话尾的呼吸声突然掐断、下一段直接以半句话开始，听着就是"咔"一下。而人眼对硬切几乎无感——抖音上绝大多数切片全是硬切。</p>
+  <p>所以顺序是：<b>① 接缝淡化（已在生成时自动做好，120ms）→ ② 音效盖住切点 → ③ 最后才考虑转场。</b>加一堆叠化反而会显得像 PPT。</p>
+</div>
+
+<div class="tip">
+  <h4>新版：爆点可以交给程序自动做（阶段 B 里填「爆点句号」）</h4>
+  <p>生成草稿时在页面上填一栏 <b>爆点句号</b>（如 <code>42,88,136</code>），程序会自动完成两件事：<b>① 在爆点句前面切出 0.2 秒、把这一段音量拉到 0（静音留白，画面照走）；② 画面 0.14 秒推到 1.12 倍、维持 0.45 秒、再 0.45 秒回正。</b></p>
+  <p>这样第 2 步「做留白」就不用自己切刀了，第 3、4 步只剩「挑音效 + 挑花字样式」——那两件是审美，机器替不了。没填这一栏时，下面第 2 步照旧手动做。</p>
+</div>
+
+<h3>第 1 步：确认开头 3 秒，再看程序已经替你做了什么</h3>
+
+<p>提示不再往画面上贴了。草稿里那条<b>「施工标记」</b>音频轨上，每个提示都是一段静音占位音频，<b>文件名就是提示内容</b>：钩子在 0.0 秒、爆点在它该落的秒数、收尾留白在最后一段前。你只要照着这条轨往下做，不用再切到浏览器去对时间码。</p>
+
+<table>
+  <tr><th style="width:22%">程序已经做好</th><th style="width:28%">在时间轴上长什么样</th><th>你要检查什么</th></tr>
+  <tr>
+    <td>钩子前置</td>
+    <td>施工标记轨上 0.0 秒处有一段 <code>0.0s_钩子-…</code> 的静音占位</td>
+    <td>听一句：<b>有没有一秒就抓住人？</b>如果是"那个……我跟你们说"，说明钩子选错了句，回阶段 B 重选。</td>
+  </tr>
+  <tr>
+    <td>爆点留白</td>
+    <td>爆点句前面有一小段<b>音量被拉到 0</b> 的片段</td>
+    <td>不用动。想更狠就把这一小段拉长到 0.4 秒，观众会以为卡了。</td>
+  </tr>
+  <tr>
+    <td>爆点推近</td>
+    <td>那一小段上有<b>两个菱形关键帧</b>（缩放 1.12）</td>
+    <td>不用动。觉得夸张就删掉关键帧，觉得不够就把它改成 1.18。</td>
+  </tr>
+  <tr>
+    <td>原字幕裁切</td>
+    <td>画面下部被切掉 18%，切口下面是模糊背景</td>
+    <td>看一眼底部那条带：旧字幕抹干净了没有、有没有留下半行字。没干净就取消「抹掉画面里的原字幕」，在剪映里手动把新字幕挪开。</td>
+  </tr>
+  <tr>
+    <td>模糊背景</td>
+    <td>最底下的「背景模糊」轨，整条铺满</td>
+    <td>如果某一段背景太亮抢眼，选中那段，把不透明度往下拉到 60% 左右。</td>
+  </tr>
+</table>
+
+<div class="warn">
+  <h4>程序不知道中间哪句话好笑</h4>
+  <p>它只能按你填的爆点句号干活。所以你在剪映里听一遍的时候，心里要有一张「还有哪里该动手」的地图：<b>那些程序没标的地方，就是你自己加音效和花字的地方。</b></p>
+</div>
+
+<h3>第 2 步：做留白（先做这个，因为影响后面所有音效的位置）</h3>
+
+<ol class="steps">
+  <li><b>找到【留白】标记的位置</b>，把播放头挪到它前面 1 秒处。</li>
+  <li><b>选中视频轨，按 <code>Ctrl+B</code> 切断</b>（在留白前 1 秒切一刀，爆点第一帧再切一刀）。</li>
+  <li><b>选中中间那一小段</b>，右键 → <code>音量</code> → 拉到 <b>0</b>。或者直接按 <code>Ctrl+Delete</code> 删掉这一小段（连画面一起没了，更狠，适合翻车现场）。</li>
+  <li><b>BGM 轨也要在此处切开、静音</b>，否则只静了人声，音乐会露馅。</li>
+</ol>
+
+<div class="tip">
+  <h4>留白多长？0.6–1 秒。一条片子只用一次</h4>
+  <p>短于 0.5 秒观众感觉不到，长于 1.5 秒会以为视频卡了。<b>整条只做一次</b>，用第二次就失效了——观众的耳朵会对静音产生预期。</p>
+</div>
+
+<h3>第 3 步：加音效（6–10 个，多了就吵）</h3>
+
+<p>点顶部 <code>音频</code> → 左侧 <code>音效素材</code> → 搜索框里打关键词 → 试听 → 点右下角 <code>+</code> 加到时间轴。</p>
+
+<table>
+  <tr><th style="width:24%">场景</th><th style="width:30%">搜这些词</th><th>怎么用</th></tr>
+  <tr>
+    <td>翻车 / 意外</td>
+    <td><code>唱片刮擦</code>、<code>黑胶 停顿</code></td>
+    <td>和「乌鸦飞过」<b>叠着放</b>，各 0.3 秒。单个不够好笑，两个一起才有那味。</td>
+  </tr>
+  <tr>
+    <td>尴尬 / 无语</td>
+    <td><code>乌鸦</code>、<code>冷场</code></td>
+    <td>放在他说完话后的沉默处，音量压低（−18dB 左右），是背景不是主角。</td>
+  </tr>
+  <tr>
+    <td>爆点 / 反转</td>
+    <td><code>低音 轰鸣</code>、<code>Boom</code>、<code>叮</code></td>
+    <td>压在爆点第一帧。<b>音量 −8dB</b>，要能听见但不能盖住台词。</td>
+  </tr>
+  <tr>
+    <td>转场 / 注意力</td>
+    <td><code>咻</code>、<code>whoosh</code></td>
+    <td>钩子跳切回正文的那一帧（约 2 秒处），用来标记"时间倒流"。</td>
+  </tr>
+  <tr>
+    <td>打字 / 强调</td>
+    <td><code>打字机</code></td>
+    <td>花字出现时同步，一个花字配一声，别连着用。</td>
+  </tr>
+</table>
+
+<div class="warn">
+  <h4>音效两条铁律</h4>
+  <p><b>① 音量必须压到 −8 ~ −12dB。</b>剪映里选中音效 → 右上角「音量」，默认 100 就是 0dB，拉到 30–40% 差不多。盖住人声是新手最常见的错误。</p>
+  <p><b>② 音效要对齐"动作帧"，不是"台词帧"。</b>他说到笑点的那一个字，音效就在那一帧响，早半秒晚半秒都会让人觉得"廉价"。</p>
+</div>
+
+<h3>第 4 步：加花字（3–5 个，这是你唯一需要"设计"的地方）</h3>
+
+<p>因为原片自带字幕，花字是你唯一能做的视觉包装，所以它值得认真做——但也正因为只有它，<b>数量必须克制</b>。</p>
+
+<ol class="steps">
+  <li><b>点顶部 <code>文本</code> → 左侧 <code>花字</code></b>，选一个带入场动画的样式（推荐黄色/白色描边一类，别选彩虹渐变）。</li>
+  <li><b>点右下角 <code>+</code> 加到时间轴</b>，会落在"花字"轨上。</li>
+  <li><b>双击文字框，只写 2–4 个字</b>：<code>离谱</code>、<code>？？？</code>、<code>完蛋</code>、<code>我裂开</code>。整句话绝不放进花字。</li>
+  <li><b>拖时长到 0.6–1.2 秒</b>，动画播完就消失。挂 3 秒以上观众会烦。</li>
+  <li><b>位置：画面左上方或右上方</b>，<b>绝不压人物脸，也不压原字幕带</b>（原字幕在画面 72%–79% 高度，花字放 15%–30% 那一条带最安全）。</li>
+</ol>
+
+<div class="tip">
+  <h4>放哪四个位置？</h4>
+  <p>① 钩子那 2 秒（标题式花字，让人一秒知道这视频讲什么）；② 爆点（<code>哈哈哈哈</code> 或 <code>？</code>）；③ 反应镜头（他愣住的时候放 <code>人已麻</code>）；④ 结尾（引导关注，或放个悬念词）。<b>中间那些平淡的段落一个都别放。</b></p>
+</div>
+
+<h3>第 5 步：配 BGM</h3>
+
+<ol class="steps">
+  <li>点 <code>音频</code> → <code>音乐素材</code> → 搜<b>情绪词</b>而不是曲名：<code>搞笑</code>、<code>滑稽</code>、<code>轻松</code>、<code>悬疑</code>。喜剧切片首选<b>轻快的拨弦/马林巴</b>类，节奏快但不抢戏。</li>
+  <li>拖进时间轴，<b>选中 → 音量拉到 15–25%</b>（约 −20dB）。检验方法：<b>闭上眼睛只听，你要能听清每个字</b>。</li>
+  <li><b>做音乐反转（可选但很有效）</b>：在爆点处把 BGM 切断，接一首风格完全相反的（正经的、悲伤的、婚礼进行曲）。画面在翻车、音乐在庄严 —— 反差本身就是笑点。</li>
+</ol>
+
+<h3>第 6 步：收尾——删掉施工标记轨、做封面</h3>
+
+<p><b>选中「施工标记·导出前删我」整条删除。</b>它只是一串静音占位音频（画面里本来就看不见），留着的坏处是音轨变乱、以后自己分不清哪条是 BGM。</p>
+
+<p>然后点 <code>导出</code> 旁边的 <code>设置封面</code>：<b>固定一个版式，以后不再改</b>——大脸特写 + 一行 8 字以内的黄底黑字，要能在一屏缩略图里看清。定死它，每次只换文字。</p>
+
+<h2><span class="num">06</span>阶段 E：导出与发布</h2>
+
+<p>导出参数<b>一次定死，以后不再纠结</b>。每次重新选一遍是纯粹的浪费：</p>
+
+<table>
+  <tr><th style="width:26%">项</th><th>值</th></tr>
+  <tr><td>分辨率</td><td>1080P（你的源是 1910×1080，导出 1080P 足够，别开 4K——体积翻三倍，平台还会二次压缩）</td></tr>
+  <tr><td>帧率</td><td>30fps（源是 30 就跑 30，别升 60）</td></tr>
+  <tr><td>码率</td><td>选「推荐」或「更高」都行，不要选"自定义"乱填</td></tr>
+  <tr><td>格式</td><td>MP4 / H.264（平台通吃）</td></tr>
+</table>
+
+<p>发布时只做三件事：<b>标题写一句钩子</b>（和开头第一句一致，别写"分享一个搞笑片段"这种废话）、<b>话题带 #主播名 + 2 个内容相关词</b>、<b>封面用你做好的那张</b>。别在发布页重新调封面，会变模糊。</p>
+
+<h2><span class="num">07</span>出问题了：按层排查，别跳层</h2>
+
+<p>新手最容易犯的错是<b>一上来就改审美</b>——觉得不好看，立刻去调花字颜色。但问题往往在下面两层。</p>
+
+<table>
+  <tr><th style="width:16%">层</th><th style="width:26%">先问自己</th><th>出问题怎么办</th></tr>
+  <tr><td>第 1 层<br>文件层</td><td>草稿能打开吗？画面有素材吗？</td><td>这一层错，后面全白搭。见下表前三行。</td></tr>
+  <tr><td>第 2 层<br>数据层</td><td>有没有播两遍？有没有缺句？节奏对不对？</td><td>决定"能不能看懂"，比好不好看重要得多。</td></tr>
+  <tr><td>第 3 层<br>审美层</td><td>钩子够狠吗？音效准吗？花字多了吗？</td><td>靠多剪长出来，改代码没用。</td></tr>
+</table>
+
+<h3>症状对照表</h3>
+<table>
+  <tr><th style="width:30%">症状</th><th style="width:28%">原因</th><th>解决</th></tr>
+  <tr><td>双击 bat 窗口一闪就关<br>或满屏乱码</td><td>bat 被保存成了 UTF-8/LF，cmd 只认 ASCII+CRLF</td><td>重新拷贝原始文件，<b>别用记事本"另存为 UTF-8"</b></td></tr>
+  <tr><td>页面顶部出现红条</td><td>黑窗口被关掉了，服务已停</td><td>重新双击 <code>start.bat</code>，那个窗口开着别关</td></tr>
+  <tr><td>拖文件显示"读取失败"</td><td>服务断了 / 请求没发出去</td><td>看红条；重试一次；仍失败发我 <code>uploads\_server.log</code></td></tr>
+  <tr><td>剪映里找不到草稿</td><td>草稿目录不是剪映设置的那个位置</td><td>剪映 → 设置 → 草稿位置，确认是 <code>...\com.lveditor.draft</code></td></tr>
+  <tr><td>草稿能看见名字，点开是空的</td><td>上次生成中途失败，只写了 meta 没写 content</td><td>删掉它重新生成（新版失败会自动清理，不会再出现）</td></tr>
+  <tr><td>打开提示"素材丢失"</td><td><code>uploads\</code> 里的视频被删或移动了</td><td>别删 uploads；已经删了就重新拖一遍视频生成</td></tr>
+  <tr><td>画面上两套字幕打架</td><td>原片已烧字幕，又叠加了新字幕</td><td>重新生成时<b>不要勾</b>「叠加我自己的字幕」</td></tr>
+  <tr><td><b>整条片子完全没有声音</b></td><td>旧版本用「音量关键帧」做淡化，剪映把它读成 0%–1% 音量，四段全被压成静音</td><td>完全退出剪映 → 双击 <code>fix-audio.bat</code> → 回车（修最新草稿）；或照原样再生成一次。新版已改用剪映原生淡入淡出</td></tr>
+  <tr><td>片段切换"咔"一下、很生硬</td><td>声音在切点突变（呼吸/尾音被掐断），不是画面问题</td><td>「接缝淡化」填 0.12（默认已开）；仍觉得跳就在切点加一个 <code>咻</code> 音效盖住</td></tr>
+  <tr><td>字幕和声音差一点</td><td>原片字幕的时间轴与语音本身有微小偏移</td><td>默认不加新字幕就不会遇到；执意要加就在剪映里手动挪</td></tr>
+  <tr><td>开头少了半句</td><td>首尾留白不够</td><td>「前后留白」改 0.4 重新生成</td></tr>
+</table>
+
+<h2><span class="num">08</span>想换风格：参数改在哪</h2>
+
+<p>所有样式集中在一个文件顶部，改完重新生成即生效，<b>不用重新识别字幕</b>。</p>
+
+<table>
+  <tr><th style="width:30%">想改什么</th><th>改哪个</th></tr>
+  <tr><td>字幕字号大小</td><td><code>make_draft.py</code> → <code>SUB_SIZE</code>（9 是当前值，改 8 变小、10 变大）</td></tr>
+  <tr><td>字幕描边粗细</td><td><code>SUB_BORDER_W</code>（当前 25）</td></tr>
+  <tr><td>单行最多几个字</td><td><code>SUB_MAX_LINE</code>（当前 9；超过 12 会压到画面两侧）</td></tr>
+  <tr><td>花字底色</td><td><code>FANCY_BG_COLOR</code>（当前 <code>#FFD84D</code> 黄）</td></tr>
+  <tr><td>视频在竖屏里的高度/位置</td><td><code>make_draft.py</code> → <code>apply_layout()</code> 的 <code>blur</code> 分支（<code>VIDEO_Y</code> 0.12 = 中心在 44% 高度）</td></tr>
+  <tr><td>模糊背景的暗度</td><td><code>BG_ALPHA</code>（当前 0.62，数字越小越暗；太亮会抢前景）</td></tr>
+  <tr><td>模糊强度</td><td><code>BG_BLUR</code>（当前 0.8）—— 但<b>不用改代码</b>，界面里「背景模糊」下拉就是它：0 不糊 / 0.35 轻 / 0.55 中 / 0.8 强 / 1 极强</td></tr>
+  <tr><td>原字幕抹不干净</td><td><code>clean_subs.py</code> 的 <code>FALLBACK_BAND</code>（自动认不出字幕时的兜底区间），或删掉 <code>uploads\_clean\</code> 里对应的 <code>-clean.mp4</code> 重新生成</td></tr>
+  <tr><td>默认版式</td><td><code>LAYOUT</code>（<code>"auto"</code> = 横屏素材自动用 <code>blur</code> / 竖屏素材用 <code>fill</code>）</td></tr>
+  <tr><td>爆点推近的幅度</td><td><code>slice_by_text.py</code> → <code>PUNCH_SCALE</code>（当前 1.12；改 1.08 更含蓄、1.2 更夸张）</td></tr>
+</table>
+
+<div class="tip">
+  <h4>一次只改一个参数</h4>
+  <p>这是排查问题的通用原则，改样式也一样。同时改三个，出了问题你不知道是哪个引起的。</p>
+</div>
+
+<h2><span class="num">09</span>接下来 10 条片子怎么练</h2>
+
+<p>工具能替你干<b>"找、切、对轴、排工程"</b>，替不了<b>"哪句好笑、音效放哪、花字什么时候出"</b>。后者只能靠量堆出来，但有顺序。</p>
+
+<table>
+  <tr><th style="width:18%">阶段</th><th>练什么</th><th style="width:30%">达标标志</th></tr>
+  <tr><td>第 1–3 条</td><td><b>只练"选段"</b>。包装从简：3 个音效 + 2 个花字 + BGM，别多。</td><td>剪完自己回看一遍不觉得尴尬</td></tr>
+  <tr><td>第 4–6 条</td><td><b>练"留白"和"音效对帧"</b>。每条都必须做一次爆点前的真空。</td><td>朋友看的时候在爆点处笑了</td></tr>
+  <tr><td>第 7–8 条</td><td><b>练"音乐反转"</b>。试一次错位配乐（翻车画面 + 庄严音乐）。</td><td>能说清自己哪条的反转起作用了、为什么</td></tr>
+  <tr><td>第 9–10 条</td><td><b>练"钩子"</b>。同一个素材，试三种不同的开头第一句，对比数据。</td><td>能预判哪句当钩子完播率最高</td></tr>
+</table>
+
+<p class="big">每条剪完记三个数：时长、你自己看完几遍、发布后 3 秒完播率。</p>
+<p>十位数之后，这三个数会告诉你所有事——比任何教程都准。</p>
+
+<h2><span class="num">10</span>两条不能越过的线</h2>
+
+<div class="warn">
+  <h4>① 授权</h4>
+  <p>直播切片需要主播或公会授权（抖音、快手都有官方切片授权入口）。做得越好越容易被盯上——这条不是形式问题，是账号能不能活下去的问题。</p>
+</div>
+
+<div class="warn">
+  <h4>② 判断力</h4>
+  <p>工具能替你"找、切、对轴、排工程"，替不了"哪句好笑、音效放哪、花字什么时候出"。<b>这是整套流程里唯一必须你自己做的部分，也是最值钱的部分。</b>别指望工具替你想清楚，它只会忠实执行你给的选段。</p>
+</div>
+
+<footer>
+  <p><b>日常只需记住三件事：</b>① 双击 <code>start.bat</code>，黑窗口别关；② 原片有字幕就别勾"叠加我自己的字幕"；③ 切片长度 45–75 秒，一个笑点一条。</p>
+  <p>有问题发我日志（<code>uploads\_server.log</code>）或截图，比描述现象快得多。</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# 统一行尾：Git 上存 LF，Windows 的 .bat 检出为 CRLF（否则 cmd 解析会出错）
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 防止 Git 把中文文档当二进制
+*.md text
+*.html text
+*.py text
